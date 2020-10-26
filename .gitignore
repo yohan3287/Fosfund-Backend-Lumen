@@ -351,3 +351,11 @@ MigrationBackup/
 
 # for MacOS
 .DS_Store
+
+# Laravel/Lumen
+/vendor
+/.idea
+Homestead.json
+Homestead.yaml
+.env
+.phpunit.result.cache
