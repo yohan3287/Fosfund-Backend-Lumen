@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePembayaranTable extends Migration
+class CreatePengajuanAnakAsuhTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreatePembayaranTable extends Migration
      */
     public function up()
     {
-        Schema::create('pembayaran', function (Blueprint $table) {
+        Schema::create('pengajuan_anak_asuh', function (Blueprint $table) {
             $table->id();
             $table
-                ->foreignId('orang_tua_asuh_id')
-                ->constrained('orang_tua_asuh')
+                ->foreignId('sekolah_id')
+                ->constrained('sekolah')
                 ->onDelete('cascade');
-            $table->string('bukti_bayar_img_path');
+            $table->string('tahun_ajaran');
             $table
                 ->foreignId('admin_verifier_id')
                 ->constrained('admin')
@@ -36,6 +36,6 @@ class CreatePembayaranTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pembayaran');
+        Schema::dropIfExists('pengajuan_anak_asuh');
     }
 }
