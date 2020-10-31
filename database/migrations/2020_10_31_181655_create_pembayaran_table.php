@@ -19,7 +19,7 @@ class CreatePembayaranTable extends Migration
                 ->foreignId('orang_tua_asuh_id')
                 ->constrained('orang_tua_asuh')
                 ->onDelete('cascade');
-            $table->string('bukti_bayar_img_path');
+            $table->string('bukti_bayar_img_path')->unique();
             $table
                 ->foreignId('admin_verifier_id')
                 ->constrained('admin')

@@ -19,7 +19,7 @@ class CreateSekolahTable extends Migration
                 ->foreignId('user_id')
                 ->constrained('user')
                 ->onDelete('cascade');
-            $table->string('NPSN');
+            $table->string('NPSN')->unique();
             $table->string('jenjang_pendidikan');
             $table->string('nama');
             $table->string('alamat');
@@ -31,8 +31,8 @@ class CreateSekolahTable extends Migration
             $table->string('telepon');
             $table->string('status');
             $table->string('nama_kepala_sekolah');
-            $table->string('NRKS');
-            $table->string('KTP_kepala_sekolah_img_path');
+            $table->string('NRKS')->unique();
+            $table->string('KTP_kepala_sekolah_img_path')->unique();
             $table
                 ->foreignId('admin_verifier_id')
                 ->constrained('admin')
