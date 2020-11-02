@@ -15,7 +15,8 @@ class CreateAnakAsuhTable extends Migration
     {
         Schema::create('anak_asuh', function (Blueprint $table) {
             $table->id();
-            $table->string('NISN')->unique();
+            $table->string('NISN')
+                ->unique();
             $table->string('nama');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
@@ -23,12 +24,16 @@ class CreateAnakAsuhTable extends Migration
             $table->string('kelas');
             $table->string('alamat');
             $table->string('nama_ayah');
-            $table->string('pekerjaan_ayah');
+            $table->string('pekerjaan_ayah')
+                ->nullable();
             $table->string('nama_ibu');
-            $table->string('pekerjaan_ibu');
-            $table->string('bantuan_lain')->nullable();
+            $table->string('pekerjaan_ibu')
+                ->nullable();
+            $table->string('bantuan_lain')
+                ->nullable();
             $table->string('status');
-            $table->string('catatan');
+            $table->string('catatan')
+                ->nullable();
             $table->timestamps();
         });
     }

@@ -15,8 +15,8 @@ class CreateAdminTable extends Migration
     {
         Schema::create('admin', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignId('user_id')
+            $table->foreignId('user_id')
+                ->unique()
                 ->constrained('user')
                 ->onDelete('cascade');
             $table->string('nama');

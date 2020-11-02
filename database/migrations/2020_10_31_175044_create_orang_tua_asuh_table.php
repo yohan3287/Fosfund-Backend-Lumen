@@ -15,8 +15,8 @@ class CreateOrangTuaAsuhTable extends Migration
     {
         Schema::create('orang_tua_asuh', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignId('user_id')
+            $table->foreignId('user_id')
+                ->unique()
                 ->constrained('user')
                 ->onDelete('cascade');
             $table->string('nama');

@@ -15,8 +15,7 @@ class CreateBarangTable extends Migration
     {
         Schema::create('barang', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignId('pembelanjaan_donasi_id')
+            $table->foreignId('pembelanjaan_donasi_id')
                 ->constrained('pembelanjaan_donasi')
                 ->onDelete('cascade');
             $table->string('nama');

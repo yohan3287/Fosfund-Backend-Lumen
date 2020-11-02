@@ -15,11 +15,12 @@ class CreateSekolahTable extends Migration
     {
         Schema::create('sekolah', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignId('user_id')
+            $table->foreignId('user_id')
+                ->unique()
                 ->constrained('user')
                 ->onDelete('cascade');
-            $table->string('NPSN')->unique();
+            $table->string('NPSN')
+                ->unique();
             $table->string('jenjang_pendidikan');
             $table->string('nama');
             $table->string('alamat');
@@ -31,13 +32,16 @@ class CreateSekolahTable extends Migration
             $table->string('telepon');
             $table->string('status');
             $table->string('nama_kepala_sekolah');
-            $table->string('NRKS')->unique();
-            $table->string('KTP_kepala_sekolah_img_path')->unique();
-            $table
-                ->foreignId('admin_verifier_id')
+            $table->string('NRKS')
+                ->unique();
+            $table->string('KTP_kepala_sekolah_doc_path')
+                ->unique();
+            $table->foreignId('admin_verifier_id')
+                ->nullable()
                 ->constrained('admin')
                 ->onDelete('cascade');
-            $table->dateTime('waktu_admin_verif');
+            $table->dateTime('waktu_verif')
+                ->nullable();
             $table->timestamps();
         });
     }

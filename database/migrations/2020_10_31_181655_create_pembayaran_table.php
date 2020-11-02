@@ -15,16 +15,18 @@ class CreatePembayaranTable extends Migration
     {
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id();
-            $table
-                ->foreignId('orang_tua_asuh_id')
+            $table->foreignId('orang_tua_asuh_id')
                 ->constrained('orang_tua_asuh')
                 ->onDelete('cascade');
-            $table->string('bukti_bayar_img_path')->unique();
-            $table
-                ->foreignId('admin_verifier_id')
+            $table->string('bukti_bayar_doc_path')
+                ->unique()
+                ->nullable();
+            $table->foreignId('admin_verifier_id')
+                ->nullable()
                 ->constrained('admin')
                 ->onDelete('cascade');
-            $table->dateTime('waktu_admin_verif');
+            $table->dateTime('waktu_verif')
+                ->nullable();
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePengajuanAnakAsuhTable extends Migration
+class CreatePengajuanAnakAsuhDetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,19 @@ class CreatePengajuanAnakAsuhTable extends Migration
      */
     public function up()
     {
-        Schema::create('pengajuan_anak_asuh', function (Blueprint $table) {
+        Schema::create('pengajuan_anak_asuh_detail', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sekolah_id')
-                ->constrained('sekolah')
+            $table->foreignId('pengajuan_anak_asuh_id')
+                ->constrained('pengajuan_anak_asuh')
                 ->onDelete('cascade');
-            $table->string('tahun_ajaran');
-            $table->string('form_doc_path')
+            $table->foreignId('anak_asuh_id')
+                ->constrained('anak_asuh')
+                ->onDelete('cascade');
+            $table->foreignId('paket_donasi_id')
                 ->unique()
-                ->nullable();
-            $table->foreignId('admin_verifier_id')
                 ->nullable()
-                ->constrained('admin')
+                ->constrained('paket_donasi')
                 ->onDelete('cascade');
-            $table->dateTime('waktu_verif')
-                ->nullable();
             $table->timestamps();
         });
     }
@@ -39,6 +37,6 @@ class CreatePengajuanAnakAsuhTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pengajuan_anak_asuh');
+        Schema::dropIfExists('pengajuan_anak_asuh_detail');
     }
 }
