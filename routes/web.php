@@ -16,3 +16,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get('/keygen', function () {
+    return \Illuminate\Support\Str::random(32);
+});
