@@ -24,3 +24,13 @@ $router->get('/keygen', function () {
 $router->post('/ota/register', 'UserRegisterController@registerOTA');
 
 $router->post('/sekolah/register', 'UserRegisterController@registerSekolah');
+$router->group(['middleware' => 'client'], function () use ($router) {
+    $router->get('/test_endpoint', function () {
+        return 'hello';
+    });
+
+    $router->post('/p', function () {
+        return 'hello madafaka';
+    });
+});
+
