@@ -20,3 +20,7 @@ $router->get('/', function () use ($router) {
 $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
+
+$router->post('/ota/register', 'UserRegisterController@registerOTA');
+
+$router->post('/sekolah/register', 'UserRegisterController@registerSekolah');
