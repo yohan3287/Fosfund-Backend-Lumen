@@ -22,3 +22,5 @@ $router->get('/keygen', function () {
 });
 
 $router->post('/ota/register', 'UserRegisterController@registerOTA');
+
+$router->post('/sekolah/register', 'UserRegisterController@registerSekolah');

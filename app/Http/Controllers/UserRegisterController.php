@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrangTuaAsuh;
+use App\Models\Sekolah;
 use App\Models\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -48,6 +49,62 @@ class UserRegisterController extends Controller
                 'data' => [
                     'user' => $resultUser,
                     'ota' => $resultOTA
+                ]
+            ],200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Register fail!',
+                'data' => ''
+            ],400);
+        }
+    }
+
+    public function registerSekolah(Request $request) {
+        $email = $request->input('email');
+        $password = Hash::make($request->input('password'));
+        $NPSN = $request->input('NPSN');
+        $jenjang_pendidikan = $request->input('jenjang_pendidikan');
+        $nama = $request->input('nama');
+        $alamat = $request->input('alamat');
+        $kelurahan = $request->input('kelurahan');
+        $kecamatan = $request->input('kecamatan');
+        $kabupaten_kota = $request->input('kabupaten_kota');
+        $provinsi = $request->input('provinsi');
+        $kode_pos = $request->input('kode_pos');
+        $telepon = $request->input('telepon');
+        $status = $request->input('status');
+        $nama_kepala_sekolah = $request->input('nama_kepala_sekolah');
+        $NRKS = $request->input('NRKS');
+        $KTP_kepala_sekolah_doc_path = $request->input('KTP_kepala_sekolah_doc_path');
+
+        $resultUser = $this->insertUser($email, $password);
+
+        $resultSekolah = Sekolah::create([
+            'user_id' => $resultUser->id,
+            'NPSN' => $NPSN,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+            'nama' => $nama,
+            'alamat' => $alamat,
+            'kelurahan' => $kelurahan,
+            'kecamatan' => $kecamatan,
+            'kabupaten_kota' => $kabupaten_kota,
+            'provinsi' => $provinsi,
+            'kode_pos' => $kode_pos,
+            'telepon' => $telepon,
+            'status' => $status,
+            'nama_kepala_sekolah' => $nama_kepala_sekolah,
+            'NRKS' => $NRKS,
+            'KTP_kepala_sekolah_doc_path' => $KTP_kepala_sekolah_doc_path
+        ]);
+
+        if ($resultUser && $resultSekolah) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Register success!',
+                'data' => [
+                    'user' => $resultUser,
+                    'ota' => $resultSekolah
                 ]
             ],200);
         } else {
