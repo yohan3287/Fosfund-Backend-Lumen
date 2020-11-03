@@ -20,16 +20,20 @@ class UserRegisterController extends Controller
         //
     }
 
+    private function insertUser($email, $password) {
+        return User::create([
+            'email' => $email,
+            'password' => $password
+        ]);
+    }
+
     public function registerOTA(Request $request) {
         $email = $request->input('email');
         $password = Hash::make($request->input('password'));
         $nama = $request->input('nama');
         $telepon = $request->input('telepon');
 
-        $resultUser = User::create([
-            'email' => $email,
-            'password' => $password
-        ]);
+        $resultUser = $this->insertUser($email, $password);
 
         $resultOTA = OrangTuaAsuh::create([
             'user_id' => $resultUser->id,
