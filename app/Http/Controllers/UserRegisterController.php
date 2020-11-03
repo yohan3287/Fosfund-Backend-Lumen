@@ -7,6 +7,7 @@ use App\Models\Sekolah;
 use App\Models\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserRegisterController extends Controller
@@ -34,6 +35,7 @@ class UserRegisterController extends Controller
         $nama = $request->input('nama');
         $telepon = $request->input('telepon');
 
+        DB::beginTransaction();
         $resultUser = $this->insertUser($email, $password);
 
         if ($resultUser) {
@@ -44,6 +46,7 @@ class UserRegisterController extends Controller
             ]);
 
             if ($resultOTA) {
+                DB::commit();
                 return response()->json([
                     'success' => true,
                     'message' => 'Register success!',
@@ -53,6 +56,7 @@ class UserRegisterController extends Controller
                     ]
                 ],200);
             } else {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'Register fail!',
@@ -60,6 +64,7 @@ class UserRegisterController extends Controller
                 ],400);
             }
         } else {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'Register fail!',
@@ -86,6 +91,7 @@ class UserRegisterController extends Controller
         $NRKS = $request->input('NRKS');
         $KTP_kepala_sekolah_doc_path = $request->input('KTP_kepala_sekolah_doc_path');
 
+        DB::beginTransaction();
         $resultUser = $this->insertUser($email, $password);
 
         if ($resultUser) {
@@ -108,6 +114,7 @@ class UserRegisterController extends Controller
             ]);
 
             if ($resultSekolah) {
+                DB::commit();
                 return response()->json([
                     'success' => true,
                     'message' => 'Register success!',
@@ -117,6 +124,7 @@ class UserRegisterController extends Controller
                     ]
                 ],200);
             } else {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'Register fail!',
@@ -124,6 +132,7 @@ class UserRegisterController extends Controller
                 ],400);
             }
         } else {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'Register fail!',
