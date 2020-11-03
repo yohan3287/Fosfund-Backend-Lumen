@@ -36,21 +36,29 @@ class UserRegisterController extends Controller
 
         $resultUser = $this->insertUser($email, $password);
 
-        $resultOTA = OrangTuaAsuh::create([
-            'user_id' => $resultUser->id,
-            'nama' => $nama,
-            'telepon' => $telepon
-        ]);
+        if ($resultUser) {
+            $resultOTA = OrangTuaAsuh::create([
+                'user_id' => $resultUser->id,
+                'nama' => $nama,
+                'telepon' => $telepon
+            ]);
 
-        if ($resultUser && $resultOTA) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Register success!',
-                'data' => [
-                    'user' => $resultUser,
-                    'ota' => $resultOTA
-                ]
-            ],200);
+            if ($resultOTA) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Register success!',
+                    'data' => [
+                        'user' => $resultUser,
+                        'ota' => $resultOTA
+                    ]
+                ],200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Register fail!',
+                    'data' => ''
+                ],400);
+            }
         } else {
             return response()->json([
                 'success' => false,
@@ -80,33 +88,41 @@ class UserRegisterController extends Controller
 
         $resultUser = $this->insertUser($email, $password);
 
-        $resultSekolah = Sekolah::create([
-            'user_id' => $resultUser->id,
-            'NPSN' => $NPSN,
-            'jenjang_pendidikan' => $jenjang_pendidikan,
-            'nama' => $nama,
-            'alamat' => $alamat,
-            'kelurahan' => $kelurahan,
-            'kecamatan' => $kecamatan,
-            'kabupaten_kota' => $kabupaten_kota,
-            'provinsi' => $provinsi,
-            'kode_pos' => $kode_pos,
-            'telepon' => $telepon,
-            'status' => $status,
-            'nama_kepala_sekolah' => $nama_kepala_sekolah,
-            'NRKS' => $NRKS,
-            'KTP_kepala_sekolah_doc_path' => $KTP_kepala_sekolah_doc_path
-        ]);
+        if ($resultUser) {
+            $resultSekolah = Sekolah::create([
+                'user_id' => $resultUser->id,
+                'NPSN' => $NPSN,
+                'jenjang_pendidikan' => $jenjang_pendidikan,
+                'nama' => $nama,
+                'alamat' => $alamat,
+                'kelurahan' => $kelurahan,
+                'kecamatan' => $kecamatan,
+                'kabupaten_kota' => $kabupaten_kota,
+                'provinsi' => $provinsi,
+                'kode_pos' => $kode_pos,
+                'telepon' => $telepon,
+                'status' => $status,
+                'nama_kepala_sekolah' => $nama_kepala_sekolah,
+                'NRKS' => $NRKS,
+                'KTP_kepala_sekolah_doc_path' => $KTP_kepala_sekolah_doc_path
+            ]);
 
-        if ($resultUser && $resultSekolah) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Register success!',
-                'data' => [
-                    'user' => $resultUser,
-                    'ota' => $resultSekolah
-                ]
-            ],200);
+            if ($resultSekolah) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Register success!',
+                    'data' => [
+                        'user' => $resultUser,
+                        'ota' => $resultSekolah
+                    ]
+                ],200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Register fail!',
+                    'data' => ''
+                ],400);
+            }
         } else {
             return response()->json([
                 'success' => false,
