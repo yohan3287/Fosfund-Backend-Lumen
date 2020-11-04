@@ -25,12 +25,12 @@ $router->post('/ota/register', 'UserRegisterController@registerOTA');
 
 $router->post('/sekolah/register', 'UserRegisterController@registerSekolah');
 $router->group(['middleware' => 'client'], function () use ($router) {
-    $router->get('/test_endpoint', function () {
-        return 'hello';
+    $router->get('/get', function () {
+        return 'hello get';
     });
 
-    $router->post('/p', function () {
-        return 'hello madafaka';
+    $router->post('/post', function () {
+        return 'hello post';
     });
 });
 
