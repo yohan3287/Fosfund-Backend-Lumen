@@ -358,3 +358,4 @@ MigrationBackup/
 Homestead.json
 Homestead.yaml
 .phpunit.result.cache
+.env
