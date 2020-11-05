@@ -45,6 +45,6 @@ class Sekolah extends Model implements AuthenticatableContract, AuthorizableCont
      * @var array
      */
     protected $hidden = [
-        'password'
+
     ];
 }
