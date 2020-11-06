@@ -67,6 +67,25 @@ class OrangTuaAsuhController extends Controller
 
     public function konfirmasiBayar ($ota_id, $order_id, Request $request) {
         $buktiBayarDocPath = $request->input('bukti_bayar_doc_path');
+//        dd($buktiBayarDocPath);
+        DB::beginTransaction();
+        $result = Order::findOrFail($order_id)
+            ->update(['bukti_bayar_doc_path' => $buktiBayarDocPath]);
 
+        if ($request) {
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Insert bukti bayar success!',
+                'data' => $result
+            ],200);
+        } else {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Insert bukti bayar fail!',
+                'data' => ''
+            ],400);
+        }
     }
 }
