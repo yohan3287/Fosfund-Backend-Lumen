@@ -48,7 +48,7 @@ class OrangTuaAsuhController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Register success!',
+                'message' => 'Insert order success!',
                 'data' => [
                     'order' => $resultOrder,
                     'paket_donasi_sd_250k' => $resultPaketDonasiSD250K,
@@ -59,7 +59,7 @@ class OrangTuaAsuhController extends Controller
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'insert order fail!',
+                'message' => 'Insert order fail!',
                 'data' => ''
             ],400);
         }
