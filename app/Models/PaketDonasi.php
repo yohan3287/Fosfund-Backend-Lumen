@@ -20,7 +20,8 @@ class PaketDonasi extends Model implements AuthenticatableContract, Authorizable
      * @var array
      */
     protected $fillable = [
-        'pembayaran_id',
+        'order_id',
+        'nama',
         'admin_distributor_id',
         'tanggal_distribusi',
         'bukti_distribusi_doc_path',

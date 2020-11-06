@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePembayaranTable extends Migration
+class CreateOrderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePembayaranTable extends Migration
      */
     public function up()
     {
-        Schema::create('pembayaran', function (Blueprint $table) {
+        Schema::create('order', function (Blueprint $table) {
             $table->id();
             $table->foreignId('orang_tua_asuh_id')
                 ->constrained('orang_tua_asuh')
@@ -21,11 +21,11 @@ class CreatePembayaranTable extends Migration
             $table->string('bukti_bayar_doc_path')
                 ->unique()
                 ->nullable();
-            $table->foreignId('admin_verifier_id')
+            $table->foreignId('admin_verifier_pembayaran_id')
                 ->nullable()
                 ->constrained('admin')
                 ->onDelete('cascade');
-            $table->dateTime('waktu_verif')
+            $table->dateTime('waktu_verif_pembayaran')
                 ->nullable();
             $table->timestamps();
         });
