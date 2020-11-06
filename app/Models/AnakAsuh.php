@@ -9,20 +9,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class OrangTuaAsuh extends Model implements AuthenticatableContract, AuthorizableContract
+class AnakAsuh extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
 
-    protected $table = 'orang_tua_asuh';
+    protected $table = 'anak_asuh';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'NISN',
         'nama',
-        'telepon'
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'kelas',
+        'alamat',
+        'nama_ayah',
+        'pekerjaan_ayah',
+        'nama_ibu',
+        'pekerjaan_ibu',
+        'bantuan_lain',
+        'status',
+        'catatan'
     ];
 
     /**

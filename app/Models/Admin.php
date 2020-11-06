@@ -8,12 +8,13 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
+use Laravel\Passport\HasApiTokens;
 
-class OrangTuaAsuh extends Model implements AuthenticatableContract, AuthorizableContract
+class Admin extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use Authenticatable, Authorizable, HasFactory, HasApiTokens;
 
-    protected $table = 'orang_tua_asuh';
+    protected $table = 'admin';
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +23,7 @@ class OrangTuaAsuh extends Model implements AuthenticatableContract, Authorizabl
     protected $fillable = [
         'user_id',
         'nama',
-        'telepon'
+        'jabatan'
     ];
 
     /**

@@ -8,21 +8,23 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
+use Laravel\Passport\HasApiTokens;
 
-class OrangTuaAsuh extends Model implements AuthenticatableContract, AuthorizableContract
+class Pembayaran extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use Authenticatable, Authorizable, HasFactory, HasApiTokens;
 
-    protected $table = 'orang_tua_asuh';
+    protected $table = 'pembayaran';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'nama',
-        'telepon'
+        'orang_tua_asuh_id',
+        'bukti_bayar_doc_path',
+        'admin_verifier_id',
+        'waktu_verif'
     ];
 
     /**
