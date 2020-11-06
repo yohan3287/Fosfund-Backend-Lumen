@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\OrangTuaAsuh;
 use App\Models\Order;
 use App\Models\PaketDonasi;
 use Illuminate\Http\Request;
@@ -18,6 +19,31 @@ class OrangTuaAsuhController extends Controller
     public function __construct()
     {
         //
+    }
+
+
+
+    public function getHistory ($ota_id) {
+        $resultWithoutAA = DB::table('order')
+            ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
+            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
+            ->where('order.orang_tua_asuh_id', $ota_id)
+//            ->select('paket_donasi.id')
+            ->get();
+
+
+        $resultWithAA = DB::table('order')
+            ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
+            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
+            ->join('anak_asuh', 'anak_asuh')
+            ->where('order.orang_tua_asuh_id', $ota_id)
+//            ->select('paket_donasi.id')
+            ->union($resultWithoutAA)
+            ->get();
+
+        return response()->json([
+            'result' => $resultWithAA
+        ]);
     }
 
     public function order ($ota_id, Request $request) {
@@ -65,7 +91,7 @@ class OrangTuaAsuhController extends Controller
         }
     }
 
-    public function konfirmasiBayar ($ota_id, $order_id, Request $request) {
+    public function confirmPayment ($ota_id, $order_id, Request $request) {
         $buktiBayarDocPath = $request->input('bukti_bayar_doc_path');
 //        dd($buktiBayarDocPath);
         DB::beginTransaction();
