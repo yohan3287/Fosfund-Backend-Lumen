@@ -15,8 +15,9 @@ class CreatePaketDonasiTable extends Migration
     {
         Schema::create('paket_donasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pembayaran_id')
-                ->constrained('pembayaran')
+            $table->string('nama');
+            $table->foreignId('order_id')
+                ->constrained('order')
                 ->onDelete('cascade');
             $table->foreignId('admin_distributor_id')
                 ->nullable()
