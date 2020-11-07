@@ -21,28 +21,31 @@ class OrangTuaAsuhController extends Controller
         //
     }
 
-
-
     public function getHistory ($ota_id) {
         $resultWithoutAA = DB::table('order')
             ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
-            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
+//            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
             ->where('order.orang_tua_asuh_id', $ota_id)
-//            ->select('paket_donasi.id')
+            ->select('paket_donasi.id as a')
             ->get();
 
 
         $resultWithAA = DB::table('order')
             ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
             ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
-            ->join('anak_asuh', 'anak_asuh')
+            ->join('anak_asuh', 'anak_asuh.id', 'pengajuan_anak_asuh_detail.anak_asuh_id')
             ->where('order.orang_tua_asuh_id', $ota_id)
-//            ->select('paket_donasi.id')
-            ->union($resultWithoutAA)
+            ->select('paket_donasi.id as a')
+//            ->union($resultWithoutAA)
             ->get();
 
+        $resultAll = $resultWithAA->union($resultWithoutAA);
+
+
         return response()->json([
-            'result' => $resultWithAA
+            'resultWOAA' => $resultWithoutAA,
+            'resultWAA' => $resultWithAA,
+            'resultAll' => $resultAll
         ]);
     }
 
