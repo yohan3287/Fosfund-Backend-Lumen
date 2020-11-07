@@ -6,6 +6,7 @@ use App\Models\OrangTuaAsuh;
 use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,6 +20,51 @@ class UserController extends Controller
     public function __construct()
     {
         //
+    }
+
+    public function getProfile () {
+        $userID = Auth::id();
+
+        $resultOTA = DB::table('user')
+            ->join('orang_tua_asuh', 'orang_tua_asuh.user_id', 'user.id')
+            ->where('user.id', $userID)
+            ->get();
+
+        if ($resultOTA) {
+            Return response()->json([
+                "success!" => true,
+                "data" => $resultOTA
+            ]);
+        } else {
+            $resultSekolah = DB::table('user')
+                ->join('sekolah', 'sekolah.user_id', 'user.id')
+                ->where('user.id', $userID)
+                ->get();
+
+            if ($resultSekolah) {
+                Return response()->json([
+                    "success!" => true,
+                    "data" => $resultSekolah
+                ]);
+            } else {
+                $resultAdmin = DB::table('user')
+                    ->join('admin', 'admin.user_id', 'user.id')
+                    ->where('user.id', $userID)
+                    ->get();
+
+                if ($resultAdmin) {
+                    Return response()->json([
+                        "success!" => true,
+                        "data" => $resultAdmin
+                    ]);
+                } else {
+                    Return response()->json([
+                        "success!" => false,
+                        "data" => ''
+                    ]);
+                }
+            }
+        }
     }
 
     private function insertUser($email, $password) {
