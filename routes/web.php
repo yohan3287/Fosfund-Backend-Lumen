@@ -21,12 +21,13 @@ $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
 
-$router->post('/ota/register', 'UserRegisterController@registerOTA');
-$router->post('/sekolah/register', 'UserRegisterController@registerSekolah');
+$router->post('/ota/register', 'UserController@registerOTA');
+$router->post('/sekolah/register', 'UserController@registerSekolah');
 
 $router->group(['middleware' => 'client'], function () use ($router) {
-    $router->get('/get', function () {
-        return 'hello get';
+    $router->get('/get', function (\Illuminate\Http\Request $request) {
+//        return \Illuminate\Support\Facades\Auth::user();
+        return $request->user();
     });
 
     $router->post('/post', function () {
