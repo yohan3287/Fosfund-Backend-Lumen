@@ -22,31 +22,45 @@ class OrangTuaAsuhController extends Controller
     }
 
     public function getHistory ($ota_id) {
-        $resultWithoutAA = DB::table('order')
-            ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
-//            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
-            ->where('order.orang_tua_asuh_id', $ota_id)
-            ->select('paket_donasi.id as a')
-            ->get();
+        $result = DB::select('
+        SELECT
+            order.id AS order_id,
+            order.bukti_bayar_doc_path,
+            order.waktu_verif_pembayaran,
+            paket_donasi.id AS paket_donasi_id,
+            paket_donasi.tanggal_distribusi,
+            paket_donasi.tanggal_penyerahan,
+            paket_donasi.waktu_verif_penyerahan,
+            a.anak_asuh_id,
+            a.nama,
+            a.NISN
+        FROM `order`
+        JOIN paket_donasi ON order.id = paket_donasi.order_id
+        LEFT JOIN (
+            SELECT
+                pengajuan_anak_asuh_detail.paket_donasi_id,
+                pengajuan_anak_asuh_detail.anak_asuh_id,
+                anak_asuh.NISN,
+                anak_asuh.nama
+            FROM `pengajuan_anak_asuh_detail`
+            JOIN anak_asuh ON anak_asuh.id = pengajuan_anak_asuh_detail.anak_asuh_id
+        ) as a ON paket_donasi.id = a.paket_donasi_id
+        WHERE order.orang_tua_asuh_id = ?
+        ', [$ota_id]);
 
-
-        $resultWithAA = DB::table('order')
-            ->join('paket_donasi', 'paket_donasi.order_id', 'order.id')
-            ->join('pengajuan_anak_asuh_detail', 'pengajuan_anak_asuh_detail.paket_donasi_id', 'paket_donasi.id')
-            ->join('anak_asuh', 'anak_asuh.id', 'pengajuan_anak_asuh_detail.anak_asuh_id')
-            ->where('order.orang_tua_asuh_id', $ota_id)
-            ->select('paket_donasi.id as a')
-//            ->union($resultWithoutAA)
-            ->get();
-
-        $resultAll = $resultWithAA->union($resultWithoutAA);
-
-
-        return response()->json([
-            'resultWOAA' => $resultWithoutAA,
-            'resultWAA' => $resultWithAA,
-            'resultAll' => $resultAll
-        ]);
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'message' => 'get success!',
+                'data' => $result,
+            ],200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'get fail!',
+                'data' => '',
+            ],400);
+        }
     }
 
     public function order ($ota_id, Request $request) {
