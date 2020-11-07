@@ -32,6 +32,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
     $router->post('/post', function () {
         return 'hello post';
     });
+    $router->post('/sekolah/{sekolah_id}/pengajuan/anakasuh', 'SekolahController@pengajuanAA');
 
     $router->post('/ota/{ota_id}/order', 'OrangTuaAsuhController@order');
     $router->post('/ota/{ota_id}/bayar/{order_id}', 'OrangTuaAsuhController@konfirmasiBayar');
