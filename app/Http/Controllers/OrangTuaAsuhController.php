@@ -26,11 +26,13 @@ class OrangTuaAsuhController extends Controller
     private function getOTAID () {
         $userID = Auth::id();
 
-        return DB::select('
-            SELECT id AS ota_id
+        $result = DB::select('
+            SELECT id
             FROM orang_tua_asuh
             WHERE orang_tua_asuh.user_id = ?;
         ', [$userID]);
+
+        return (int)$result[0]->id;
     }
 
     public function getHistory () {
@@ -42,6 +44,7 @@ class OrangTuaAsuhController extends Controller
                 order.bukti_bayar_doc_path,
                 order.waktu_verif_pembayaran,
                 paket_donasi.id AS paket_donasi_id,
+                paket_donasi.nama AS paket_donasi,
                 paket_donasi.tanggal_distribusi,
                 paket_donasi.tanggal_penyerahan,
                 paket_donasi.waktu_verif_penyerahan,
@@ -156,7 +159,5 @@ class OrangTuaAsuhController extends Controller
                 'data' => ''
             ],400);
         }
-
-
     }
 }

@@ -24,11 +24,13 @@ class SekolahController extends Controller
     private function getSekolahID () {
         $userID = Auth::id();
 
-        return DB::select('
-            SELECT id AS sekolah_id
+        $result = DB::select('
+            SELECT id
             FROM sekolah
             WHERE sekolah.user_id = ?;
         ', [$userID]);
+
+        return (int)$result[0]->id;
     }
 
     public function pengajuanAA (Request $request) {
