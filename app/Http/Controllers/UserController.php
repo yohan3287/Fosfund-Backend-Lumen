@@ -25,10 +25,12 @@ class UserController extends Controller
     public function getProfile () {
         $userID = Auth::id();
 
-        $resultOTA = DB::table('user')
-            ->join('orang_tua_asuh', 'orang_tua_asuh.user_id', 'user.id')
-            ->where('user.id', $userID)
-            ->get();
+        $resultOTA = DB::select('
+            SELECT *
+            FROM user
+            JOIN orang_tua_asuh ON orang_tua_asuh.user_id = user.id
+            WHERE user.id = ?
+        ', [$userID]);
 
         if ($resultOTA) {
             Return response()->json([
@@ -36,10 +38,12 @@ class UserController extends Controller
                 "data" => $resultOTA
             ]);
         } else {
-            $resultSekolah = DB::table('user')
-                ->join('sekolah', 'sekolah.user_id', 'user.id')
-                ->where('user.id', $userID)
-                ->get();
+            $resultSekolah = DB::select('
+                SELECT *
+                FROM user
+                JOIN sekolah ON sekolah.user_id = user.id
+                WHERE user.id = ?
+            ', [$userID]);
 
             if ($resultSekolah) {
                 Return response()->json([
@@ -47,10 +51,12 @@ class UserController extends Controller
                     "data" => $resultSekolah
                 ]);
             } else {
-                $resultAdmin = DB::table('user')
-                    ->join('admin', 'admin.user_id', 'user.id')
-                    ->where('user.id', $userID)
-                    ->get();
+                $resultAdmin = DB::select('
+                    SELECT *
+                    FROM user
+                    JOIN admin ON admin.user_id = user.id
+                    WHERE user.id = ?
+                ', [$userID]);
 
                 if ($resultAdmin) {
                     Return response()->json([
