@@ -6,6 +6,7 @@ use App\Models\AnakAsuh;
 use App\Models\PengajuanAnakAsuh;
 use App\Models\PengajuanAnakAsuhDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SekolahController extends Controller
@@ -20,13 +21,24 @@ class SekolahController extends Controller
         //
     }
 
-    public function pengajuanAA ($sekolah_id ,Request $request) {
+    private function getSekolahID () {
+        $userID = Auth::id();
+
+        return DB::select('
+            SELECT id AS sekolah_id
+            FROM sekolah
+            WHERE sekolah.user_id = ?
+        ', [$userID]);
+    }
+
+    public function pengajuanAA (Request $request) {
+        $sekolahID = $this->getSekolahID();
         $tahun_ajaran = $request->input('tahun_ajaran');
         $siswa = $request->input('siswa');
 
         DB::beginTransaction();
         $resultPengajuanAA = PengajuanAnakAsuh::create([
-            'sekolah_id' => $sekolah_id,
+            'sekolah_id' => $sekolahID,
             'tahun_ajaran' => $tahun_ajaran
         ]);
 
@@ -63,7 +75,6 @@ class SekolahController extends Controller
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Insert pengajuan anak asuh success!',
                 'data' => [
                     'pengajuan_anak_asuh' => $resultPengajuanAA,
                     'anak_asuh' => $resultAA
@@ -73,7 +84,6 @@ class SekolahController extends Controller
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Insert pengajuan anak asuh fail!',
                 'data' => ''
             ],400);
         }
