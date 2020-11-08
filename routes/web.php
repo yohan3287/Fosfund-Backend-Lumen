@@ -23,6 +23,8 @@ $router->get('/keygen', function () {
 
 $router->post('/ota/register', 'UserController@registerOTA');
 $router->post('/sekolah/register', 'UserController@registerSekolah');
+$router->post('/admin/register', 'UserController@registerAdmin');
+
 
 $router->group(['middleware' => 'client'], function () use ($router) {
     $router->get('/get', function () {

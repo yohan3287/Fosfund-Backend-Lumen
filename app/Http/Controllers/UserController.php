@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\OrangTuaAsuh;
 use App\Models\Sekolah;
 use App\Models\User;
@@ -22,7 +23,7 @@ class UserController extends Controller
         //
     }
 
-    public function getProfile () {
+    public function getProfile() {
         $userID = Auth::id();
 
         $resultOTA = DB::select('
@@ -36,7 +37,7 @@ class UserController extends Controller
             Return response()->json([
                 "success!" => true,
                 "data" => $resultOTA
-            ]);
+            ], 200);
         } else {
             $resultSekolah = DB::select('
                 SELECT *
@@ -49,7 +50,7 @@ class UserController extends Controller
                 Return response()->json([
                     "success!" => true,
                     "data" => $resultSekolah
-                ]);
+                ], 200);
             } else {
                 $resultAdmin = DB::select('
                     SELECT *
@@ -62,12 +63,12 @@ class UserController extends Controller
                     Return response()->json([
                         "success!" => true,
                         "data" => $resultAdmin
-                    ]);
+                    ], 200);
                 } else {
                     Return response()->json([
                         "success!" => false,
                         "data" => ''
-                    ]);
+                    ], 400);
                 }
             }
         }
@@ -100,7 +101,6 @@ class UserController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'message' => 'Register success!',
                     'data' => [
                         'user' => $resultUser,
                         'ota' => $resultOTA
@@ -110,7 +110,6 @@ class UserController extends Controller
                 DB::rollBack();
                 return response()->json([
                     'success' => false,
-                    'message' => 'Register fail!',
                     'data' => ''
                 ],400);
             }
@@ -118,7 +117,6 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Register fail!',
                 'data' => ''
             ],400);
         }
@@ -168,7 +166,6 @@ class UserController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'message' => 'Register success!',
                     'data' => [
                         'user' => $resultUser,
                         'ota' => $resultSekolah
@@ -178,7 +175,6 @@ class UserController extends Controller
                 DB::rollBack();
                 return response()->json([
                     'success' => false,
-                    'message' => 'Register fail!',
                     'data' => ''
                 ],400);
             }
@@ -186,7 +182,47 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Register fail!',
+                'data' => ''
+            ],400);
+        }
+    }
+
+    public function registerAdmin(Request $request) {
+        $email = $request->input('email');
+        $password = Hash::make($request->input('password'));
+        $nama = $request->input('nama');
+        $jabatan = $request->input('jabatan');
+
+        DB::beginTransaction();
+        $resultUser = $this->insertUser($email, $password);
+
+        if ($resultUser) {
+            $resultAdmin = Admin::create([
+                'user_id' => $resultUser->id,
+                'nama' => $nama,
+                'jabatan' => $jabatan
+            ]);
+
+            if ($resultAdmin) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'user' => $resultUser,
+                        'ota' => $resultAdmin
+                    ]
+                ],200);
+            } else {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'data' => ''
+                ],400);
+            }
+        } else {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
                 'data' => ''
             ],400);
         }
