@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\OrangTuaAsuh;
 use App\Models\Order;
 use App\Models\PaketDonasi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class OrangTuaAsuhController extends Controller
         return DB::select('
             SELECT id AS ota_id
             FROM orang_tua_asuh
-            WHERE orang_tua_asuh.user_id = ?
+            WHERE orang_tua_asuh.user_id = ?;
         ', [$userID]);
     }
 
@@ -58,7 +59,7 @@ class OrangTuaAsuhController extends Controller
                 FROM `pengajuan_anak_asuh_detail`
                 JOIN anak_asuh ON anak_asuh.id = pengajuan_anak_asuh_detail.anak_asuh_id
             ) as a ON paket_donasi.id = a.paket_donasi_id
-            WHERE order.orang_tua_asuh_id = ?
+            WHERE order.orang_tua_asuh_id = ?;
         ', [$otaID]);
 
         if ($result) {
@@ -75,9 +76,9 @@ class OrangTuaAsuhController extends Controller
     }
 
     public function order (Request $request) {
+        $otaID = $this->getOTAID();
         $jumlahPaketSd = (int)$request->input('jumlah_paket_sd');
         $jumlahPaketSmp = (int)$request->input('jumlah_paket_smp');
-        $otaID = $this->getOTAID();
 
         DB::beginTransaction();
         $resultOrder = Order::create([
@@ -118,25 +119,44 @@ class OrangTuaAsuhController extends Controller
     }
 
     public function confirmPayment ($order_id, Request $request) {
-        $buktiBayarDocPath = $request->input('bukti_bayar_doc_path');
         $otaID = $this->getOTAID();
 
-        DB::beginTransaction();
-        $result = Order::findOrFail($order_id)
-            ->update(['bukti_bayar_doc_path' => $buktiBayarDocPath]);
+        $validUser = DB::select('
+            SELECT *
+            FROM order
+            WHERE order.orang_tua_asuh_id = ? AND order.id = ?;
+        ', [$otaID, $order_id]);
 
-        if ($request) {
-            DB::commit();
-            return response()->json([
-                'success' => true,
-                'data' => $result
-            ],200);
+        if ($validUser) {
+            $file = $request->file('file');
+            $fileName = Carbon::now().'-'.$file->getClientOriginalName();
+            $fileDirectory = 'uploads/ota/'.$otaID;
+            $filePath = $file->storeAs($fileDirectory , $fileName);
+
+            DB::beginTransaction();
+            $result = Order::findOrFail($order_id)
+                ->update(['bukti_bayar_doc_path' => $filePath]);
+
+            if ($request) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'data' => $result
+                ],200);
+            } else {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'data' => ''
+                ],400);
+            }
         } else {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'data' => ''
             ],400);
         }
+
+
     }
 }
