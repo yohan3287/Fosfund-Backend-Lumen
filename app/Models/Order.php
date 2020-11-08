@@ -10,19 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class Order extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory, HasApiTokens;
 
-    protected $table = 'user';
+    protected $table = 'order';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'email',
-        'password'
+        'orang_tua_asuh_id',
+        'bukti_bayar_doc_path',
+        'admin_verifier_pembayaran_id',
+        'waktu_verif_pembayaran'
     ];
 
     /**
@@ -31,6 +33,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password'
+
     ];
 }
