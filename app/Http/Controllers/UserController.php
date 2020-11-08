@@ -6,10 +6,11 @@ use App\Models\OrangTuaAsuh;
 use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserRegisterController extends Controller
+class UserController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -19,6 +20,57 @@ class UserRegisterController extends Controller
     public function __construct()
     {
         //
+    }
+
+    public function getProfile () {
+        $userID = Auth::id();
+
+        $resultOTA = DB::select('
+            SELECT *
+            FROM user
+            JOIN orang_tua_asuh ON orang_tua_asuh.user_id = user.id
+            WHERE user.id = ?
+        ', [$userID]);
+
+        if ($resultOTA) {
+            Return response()->json([
+                "success!" => true,
+                "data" => $resultOTA
+            ]);
+        } else {
+            $resultSekolah = DB::select('
+                SELECT *
+                FROM user
+                JOIN sekolah ON sekolah.user_id = user.id
+                WHERE user.id = ?
+            ', [$userID]);
+
+            if ($resultSekolah) {
+                Return response()->json([
+                    "success!" => true,
+                    "data" => $resultSekolah
+                ]);
+            } else {
+                $resultAdmin = DB::select('
+                    SELECT *
+                    FROM user
+                    JOIN admin ON admin.user_id = user.id
+                    WHERE user.id = ?
+                ', [$userID]);
+
+                if ($resultAdmin) {
+                    Return response()->json([
+                        "success!" => true,
+                        "data" => $resultAdmin
+                    ]);
+                } else {
+                    Return response()->json([
+                        "success!" => false,
+                        "data" => ''
+                    ]);
+                }
+            }
+        }
     }
 
     private function insertUser($email, $password) {

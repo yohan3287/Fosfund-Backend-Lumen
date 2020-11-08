@@ -21,18 +21,20 @@ $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
 
-$router->post('/ota/register', 'UserRegisterController@registerOTA');
-$router->post('/sekolah/register', 'UserRegisterController@registerSekolah');
+$router->post('/ota/register', 'UserController@registerOTA');
+$router->post('/sekolah/register', 'UserController@registerSekolah');
 
 $router->group(['middleware' => 'client'], function () use ($router) {
     $router->get('/get', function () {
-        return 'hello get';
+        return \Illuminate\Support\Facades\Auth::user();
     });
 
     $router->post('/post', function () {
         return 'hello post';
     });
     $router->post('/sekolah/{sekolah_id}/pengajuan/anakasuh', 'SekolahController@pengajuanAA');
+
+    $router->get('/profile', 'UserController@getProfile');
 
     $router->get('/ota/{ota_id}', 'OrangTuaAsuhController@getHistory');
     $router->post('/ota/{ota_id}/order', 'OrangTuaAsuhController@order');
