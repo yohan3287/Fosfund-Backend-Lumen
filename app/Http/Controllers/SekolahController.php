@@ -27,7 +27,7 @@ class SekolahController extends Controller
         return DB::select('
             SELECT id AS sekolah_id
             FROM sekolah
-            WHERE sekolah.user_id = ?
+            WHERE sekolah.user_id = ?;
         ', [$userID]);
     }
 

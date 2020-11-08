@@ -29,7 +29,7 @@ class UserController extends Controller
             SELECT *
             FROM user
             JOIN orang_tua_asuh ON orang_tua_asuh.user_id = user.id
-            WHERE user.id = ?
+            WHERE user.id = ?;
         ', [$userID]);
 
         if ($resultOTA) {
@@ -42,7 +42,7 @@ class UserController extends Controller
                 SELECT *
                 FROM user
                 JOIN sekolah ON sekolah.user_id = user.id
-                WHERE user.id = ?
+                WHERE user.id = ?;
             ', [$userID]);
 
             if ($resultSekolah) {
@@ -55,7 +55,7 @@ class UserController extends Controller
                     SELECT *
                     FROM user
                     JOIN admin ON admin.user_id = user.id
-                    WHERE user.id = ?
+                    WHERE user.id = ?;
                 ', [$userID]);
 
                 if ($resultAdmin) {
