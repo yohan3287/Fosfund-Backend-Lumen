@@ -36,8 +36,8 @@ $router->group(['middleware' => 'client'], function () use ($router) {
 
     $router->get('/profile', 'UserController@getProfile');
 
-    $router->get('/ota/{ota_id}', 'OrangTuaAsuhController@getHistory');
-    $router->post('/ota/{ota_id}/order', 'OrangTuaAsuhController@order');
-    $router->post('/ota/{ota_id}/bayar/{order_id}', 'OrangTuaAsuhController@confirmPayment');
+    $router->get('/ota/', 'OrangTuaAsuhController@getHistory');
+    $router->post('/ota/order', 'OrangTuaAsuhController@order');
+    $router->post('/ota/bayar/{order_id}', 'OrangTuaAsuhController@confirmPayment');
 });
 
