@@ -54,8 +54,29 @@ class AdminController extends Controller
         }
     }
 
-    public function verifSekolah() {
+    public function verifSekolah($sekolahID) {
+        $adminID = $this->getAdminID();
 
+        DB::beginTransaction();
+        $result = DB::update('
+            UPDATE sekolah
+            SET sekolah.admin_verifier_id = ?, sekolah.waktu_verif = NOW()
+            WHERE sekolah.id = ?;
+        ', [$adminID, $sekolahID]);
+
+        if ($result) {
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ],200);
+        } else {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => ''
+            ],400);
+        }
     }
 
     public function verifPengajuanAA() {

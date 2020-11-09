@@ -45,5 +45,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
     $router->post('/sekolah/pengajuan/anakasuh', 'SekolahController@pengajuanAA');
 
     $router->post('/admin/verif/pembayaran/{order_id}', 'AdminController@verifPembayaran');
+    $router->post('/admin/verif/sekolah/{sekolah_id}', 'AdminController@verifSekolah');
+
 });
 
