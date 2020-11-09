@@ -46,6 +46,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
 
     $router->post('/admin/verif/pembayaran/{order_id}', 'AdminController@verifPembayaran');
     $router->post('/admin/verif/sekolah/{sekolah_id}', 'AdminController@verifSekolah');
+    $router->post('/admin/verif/pengajuan/aa/{pengajuan_aa_id}', 'AdminController@verifPengajuanAA');
 
 });
 
