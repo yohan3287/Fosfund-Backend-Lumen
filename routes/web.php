@@ -43,5 +43,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
     $router->post('/ota/bayar/{order_id}', 'OrangTuaAsuhController@confirmPayment');
 
     $router->post('/sekolah/pengajuan/anakasuh', 'SekolahController@pengajuanAA');
+
+    $router->post('/admin/verif/pembayaran/{order_id}', 'AdminController@verifPembayaran');
 });
 

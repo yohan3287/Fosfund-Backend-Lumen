@@ -29,8 +29,29 @@ class AdminController extends Controller
         return (int)$result[0]->id;
     }
 
-    public function verifPembayaran() {
+    public function verifPembayaran($order_id) {
+        $adminID = $this->getAdminID();
 
+        DB::beginTransaction();
+        $result = DB::update('
+            UPDATE order
+            SET order.admin_verifier_pembayaran_id = ?, order.waktu_verif_pembayaran = NOW()
+            WHERE order.id = ? AND order.bukti_bayar_doc_path != NULL;
+        ', [$adminID, $order_id]);
+
+        if ($result) {
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ],200);
+        } else {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => ''
+            ],400);
+        }
     }
 
     public function verifSekolah() {
