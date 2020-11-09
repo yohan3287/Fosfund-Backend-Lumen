@@ -35,7 +35,7 @@ class AdminController extends Controller
         DB::beginTransaction();
         $result = DB::update('
             UPDATE order
-            SET order.admin_verifier_pembayaran_id = ?, order.waktu_verif_pembayaran = NOW()
+            SET order.admin_verifier_pembayaran_id = ?, order.waktu_verif_pembayaran = CURRENT_TIMESTAMP
             WHERE order.id = ? AND order.bukti_bayar_doc_path != NULL;
         ', [$adminID, $order_id]);
 
@@ -60,7 +60,7 @@ class AdminController extends Controller
         DB::beginTransaction();
         $result = DB::update('
             UPDATE sekolah
-            SET sekolah.admin_verifier_id = ?, sekolah.waktu_verif = NOW()
+            SET sekolah.admin_verifier_id = ?, sekolah.waktu_verif = CURRENT_TIMESTAMP
             WHERE sekolah.id = ?;
         ', [$adminID, $sekolah_id]);
 
@@ -85,7 +85,7 @@ class AdminController extends Controller
         DB::beginTransaction();
         $result = DB::update('
             UPDATE pengajuan_anak_asuh
-            SET  pengajuan_anak_asuh.admin_verifier_id = ?, pengajuan_anak_asuh.waktu_verif = NOW()
+            SET  pengajuan_anak_asuh.admin_verifier_id = ?, pengajuan_anak_asuh.waktu_verif = CURRENT_TIMESTAMP
             WHERE pengajuan_anak_asuh.id = ? AND pengajuan_anak_asuh.form_doc_path != NULL;
         ', [$adminID, $pengajuan_aa_id]);
 
