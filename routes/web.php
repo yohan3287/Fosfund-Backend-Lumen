@@ -21,10 +21,11 @@ $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
 
+$router->post('/berita', 'BeritaController@getNews');
+
 $router->post('/ota/register', 'UserController@registerOTA');
 $router->post('/sekolah/register', 'UserController@registerSekolah');
 $router->post('/admin/register', 'UserController@registerAdmin');
-
 
 $router->group(['middleware' => 'client'], function () use ($router) {
     $router->get('/get', function () {
