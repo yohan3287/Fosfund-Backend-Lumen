@@ -21,9 +21,9 @@ class AdminController extends Controller
         $userID = Auth::id();
 
         $result = DB::select('
-            SELECT id
-            FROM admin
-            WHERE admin.user_id = ?;
+            SELECT `id`
+            FROM `admin`
+            WHERE `user_id` = ?;
         ', [$userID]);
 
         return (int)$result[0]->id;
@@ -34,9 +34,9 @@ class AdminController extends Controller
 
         DB::beginTransaction();
         $result = DB::update('
-            UPDATE order
-            SET order.admin_verifier_pembayaran_id = ?, order.waktu_verif_pembayaran = CURRENT_TIMESTAMP
-            WHERE order.id = ? AND order.bukti_bayar_doc_path != NULL;
+            UPDATE `order`
+            SET `admin_verifier_pembayaran_id` = ?, `waktu_verif_pembayaran` = CURRENT_TIMESTAMP
+            WHERE `id` = ? AND `bukti_bayar_doc_path` != NULL;
         ', [$adminID, $order_id]);
 
         if ($result) {
@@ -59,9 +59,9 @@ class AdminController extends Controller
 
         DB::beginTransaction();
         $result = DB::update('
-            UPDATE sekolah
-            SET sekolah.admin_verifier_id = ?, sekolah.waktu_verif = CURRENT_TIMESTAMP
-            WHERE sekolah.id = ?;
+            UPDATE `sekolah`
+            SET `admin_verifier_id` = ?, `waktu_verif` = CURRENT_TIMESTAMP
+            WHERE `id` = ?;
         ', [$adminID, $sekolah_id]);
 
         if ($result) {
@@ -84,9 +84,9 @@ class AdminController extends Controller
 
         DB::beginTransaction();
         $result = DB::update('
-            UPDATE pengajuan_anak_asuh
-            SET  pengajuan_anak_asuh.admin_verifier_id = ?, pengajuan_anak_asuh.waktu_verif = CURRENT_TIMESTAMP
-            WHERE pengajuan_anak_asuh.id = ? AND pengajuan_anak_asuh.form_doc_path != NULL;
+            UPDATE `pengajuan_anak_asuh`
+            SET  `admin_verifier_id` = ?, `waktu_verif` = CURRENT_TIMESTAMP
+            WHERE `id` = ? AND `form_doc_path` != NULL;
         ', [$adminID, $pengajuan_aa_id]);
 
         if ($result) {
