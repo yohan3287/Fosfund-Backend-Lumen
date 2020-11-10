@@ -234,7 +234,10 @@ class UserController extends Controller
         DB::beginTransaction();
         $result = DB::update('
             UPDATE `oauth_access_tokens`
-            SET `revoked` = 1
+            SET
+                `oauth_access_tokens`.`revoked` = 1,
+                `oauth_access_tokens`.`updated_at` = CURRENT_TIMESTAMP,
+                `oauth_access_tokens`.`expires_at` = CURRENT_TIMESTAMP
             WHERE `oauth_access_tokens`.`user_id` = ?;
         ', [$userID]);
 
