@@ -21,7 +21,7 @@ $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
 
-$router->post('/berita', 'BeritaController@getNews');
+$router->get('/berita', 'BeritaController@getNews');
 
 $router->post('/ota/register', 'UserController@registerOTA');
 $router->post('/sekolah/register', 'UserController@registerSekolah');
