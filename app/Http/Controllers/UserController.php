@@ -255,4 +255,23 @@ class UserController extends Controller
             ],400);
         }
     }
+
+    public function getNews() {
+        $result = DB::select('
+            SELECT *
+            FROM `berita`;
+        ');
+
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ],200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => ''
+            ],400);
+        }
+    }
 }
