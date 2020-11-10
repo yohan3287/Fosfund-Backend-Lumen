@@ -36,7 +36,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
     });
 
     $router->get('/profile', 'UserController@getProfile');
-
+    $router->get('/logout', 'UserController@logout');
 
     $router->get('/ota/', 'OrangTuaAsuhController@getHistory');
     $router->post('/ota/order', 'OrangTuaAsuhController@order');

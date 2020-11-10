@@ -227,4 +227,29 @@ class UserController extends Controller
             ],400);
         }
     }
+
+    public function logout() {
+        $userID = Auth::id();
+
+        DB::beginTransaction();
+        $result = DB::update('
+            UPDATE `oauth_access_tokens`
+            SET `revoked` = 1
+            WHERE `oauth_access_tokens`.`user_id` = ?;
+        ', [$userID]);
+
+        if ($result) {
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ],200);
+        } else {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => ''
+            ],400);
+        }
+    }
 }
