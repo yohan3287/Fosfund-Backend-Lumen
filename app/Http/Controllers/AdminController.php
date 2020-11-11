@@ -29,6 +29,28 @@ class AdminController extends Controller
         return (int)$result[0]->id;
     }
 
+    public function getUnverifiedPembayaran() {
+        if ($this->getAdminID()) {
+            $result = DB::select('
+                SELECT *
+                FROM `order`
+                WHERE `order`.`bukti_bayar_doc_path` != NULL AND `order`.`admin_verifier_pembayaran_id` = NULL;
+            ');
+
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $result
+                ],200);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'data' => ''
+        ],400);
+    }
+
     public function verifPembayaran($order_id) {
         $adminID = $this->getAdminID();
 

@@ -35,7 +35,7 @@ class OrangTuaAsuhController extends Controller
         return (int)$result[0]->id;
     }
 
-    public function getHistory () {
+    public function getRiwayat () {
         $otaID = $this->getOTAID();
 
         $result = DB::select('
