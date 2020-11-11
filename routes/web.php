@@ -47,7 +47,7 @@ $router->group(['middleware' => 'client'], function () use ($router) {
 
     $router->get('/admin/pembayaran/unverified', 'AdminController@getUnverifiedPembayaran');
     $router->post('/admin/pembayaran/verif/{order_id}', 'AdminController@verifPembayaran');
-    $router->get('/admin/sekolah', 'AdminController@getSekolah');
+    $router->get('/admin/sekolah/unverified', 'AdminController@getUnverifiedSekolah');
     $router->post('/admin/sekolah/verif/{sekolah_id}', 'AdminController@verifSekolah');
     $router->get('/admin/pengajuan/aa', 'AdminController@getPengajuanAA');
     $router->post('/admin/pengajuan/aa/verif/{pengajuan_aa_id}', 'AdminController@verifPengajuanAA');

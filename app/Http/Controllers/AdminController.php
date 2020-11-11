@@ -51,6 +51,28 @@ class AdminController extends Controller
         ],400);
     }
 
+    public function getUnverifiedSekolah() {
+        if ($this->getAdminID()) {
+            $result = DB::select('
+                SELECT *
+                FROM `sekolah`
+                WHERE `sekolah`.`admin_verifier_id` = NULL;
+            ');
+
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $result
+                ],200);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'data' => ''
+        ],400);
+    }
+
     public function verifPembayaran($order_id) {
         $adminID = $this->getAdminID();
 
