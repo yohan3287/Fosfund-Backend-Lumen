@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
 use App\Models\PaketDonasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class AdminController extends Controller
         ], 400);
     }
 
-    private function getAdminID () {
+    private function getAdminID() {
         $userID = Auth::id();
 
         $result = DB::select('
@@ -44,6 +45,34 @@ class AdminController extends Controller
         ', [$userID]);
 
         return (int)$result[0]->id;
+    }
+
+    public function publishBerita($judul, $konten, Request $request) {
+        $adminID = $this->getAdminID();
+
+        if ($adminID) {
+            $file = $request->file('doc');
+            $fileName = Carbon::now().'-'.$judul.'-'.$file->getClientOriginalName();
+            $fileDirectory = 'uploads/berita/images';
+            $filePath = $file->storeAs($fileDirectory , $fileName);
+
+            DB::beginTransaction();
+            $result = Berita::create([
+                'judul' => $judul,
+                'konten' => $konten,
+                'image_path' => $filePath,
+                'admin_publisher_id' => $adminID
+            ]);
+
+            if ($result) {
+                DB::commit();
+                return $this->trueJsonResponse($result);
+            } else {
+                DB::rollBack();
+            }
+        }
+
+        return $this->falseJsonResponse();
     }
 
     public function getUnverifiedPembayaran() {

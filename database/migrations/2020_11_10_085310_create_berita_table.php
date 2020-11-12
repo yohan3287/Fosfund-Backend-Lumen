@@ -17,7 +17,11 @@ class CreateBeritaTable extends Migration
             $table->id();
             $table->string('judul');
             $table->string('konten');
-            $table->string('image_path');
+            $table->string('image_path')
+                ->nullable();
+            $table->foreignId('admin_publisher_id')
+                ->constrained('admin')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
