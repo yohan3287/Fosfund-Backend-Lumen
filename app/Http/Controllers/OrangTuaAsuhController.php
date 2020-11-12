@@ -133,8 +133,8 @@ class OrangTuaAsuhController extends Controller
 
         if ($validUser) {
             $file = $request->file('file');
-            $fileName = Carbon::now().'-'.$file->getClientOriginalName();
-            $fileDirectory = 'uploads/ota/'.$otaID;
+            $fileName = Carbon::now().'-'.$order_id.'-'.$file->getClientOriginalName();
+            $fileDirectory = 'uploads/ota/'.$otaID.'/bukti_bayar';
             $filePath = $file->storeAs($fileDirectory , $fileName);
 
             DB::beginTransaction();
