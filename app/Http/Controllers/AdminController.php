@@ -17,6 +17,20 @@ class AdminController extends Controller
         //
     }
 
+    public function trueJsonResponse($result) {
+        return response()->json([
+            "success!" => false,
+            "data" => $result
+        ], 200);
+    }
+
+    public function falseJsonResponse() {
+        return response()->json([
+            "success!" => false,
+            "data" => ''
+        ], 400);
+    }
+
     private function getAdminID () {
         $userID = Auth::id();
 
@@ -39,17 +53,11 @@ class AdminController extends Controller
             ');
 
             if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function verifPembayaran($order_id) {
@@ -68,19 +76,13 @@ class AdminController extends Controller
 
             if ($result) {
                 DB::commit();
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             } else {
                 DB::rollBack();
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function getUnverifiedSekolah() {
@@ -92,17 +94,11 @@ class AdminController extends Controller
             ');
 
             if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function verifSekolah($sekolah_id) {
@@ -120,19 +116,13 @@ class AdminController extends Controller
 
             if ($result) {
                 DB::commit();
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             } else {
                 DB::rollBack();
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function getUnverifiedPengajuanAA() {
@@ -145,17 +135,11 @@ class AdminController extends Controller
             ');
 
             if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function verifPengajuanAA($pengajuan_aa_id) {
@@ -174,22 +158,43 @@ class AdminController extends Controller
 
             if ($result) {
                 DB::commit();
-                return response()->json([
-                    'success' => true,
-                    'data' => $result
-                ],200);
+                return $this->trueJsonResponse($result);
             } else {
                 DB::rollBack();
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'data' => ''
-        ],400);
+        return $this->falseJsonResponse();
     }
 
     public function getMatchedData() {
+        if ($this->getAdminID()) {
+            $result = DB::select('
+                SELECT
+                    `sekolah`.`id` AS sekolah_id,
+                    `sekolah`.`jenjang_pendidikan` AS jenjang_pendidikan,
+                    `sekolah`.`nama` AS nama_sekolah,
+                    `sekolah`.`provinsi` AS provinsi_sekolah,
+                    `anak_asuh`.`id` AS anak_asuh_id,
+                    `anak_asuh`.`nama` AS nama_anak_asuh,
+                    `anak_asuh`.`kelas` AS kelas_anak_asuh,
+                    `pengajuan_anak_asuh`.`tahun_ajaran` AS tahun_ajaran,
+                    `orang_tua_asuh`.`id` AS orang_tua_asuh_id,
+                    `orang_tua_asuh`.`nama` AS nama_orang_tua_asuh
+                FROM `orang_tua_asuh`
+                JOIN `order` ON `order`.`orang_tua_asuh_id` = `orang_tua_asuh`.`id`
+                JOIN `paket_donasi` ON `paket_donasi`.`order_id` = `order`.`id`
+                JOIN `pengajuan_anak_asuh_detail` ON `pengajuan_anak_asuh_detail`.`paket_donasi_id` = `paket_donasi`.`id`
+                JOIN `anak_asuh` ON `anak_asuh`.`id` = `pengajuan_anak_asuh_detail`.`anak_asuh_id`
+                JOIN `pengajuan_anak_asuh` ON `pengajuan_anak_asuh`.`id` = `pengajuan_anak_asuh_detail`.`pengajuan_anak_asuh_id`
+                JOIN `sekolah` ON `sekolah`.`id` = `pengajuan_anak_asuh`.`sekolah_id`;
+            ');
 
+            if ($result) {
+                return $this->trueJsonResponse($result);
+            }
+        }
+
+        return $this->falseJsonResponse();
     }
 }
