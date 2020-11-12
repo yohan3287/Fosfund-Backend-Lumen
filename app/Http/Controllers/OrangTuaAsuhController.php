@@ -126,8 +126,9 @@ class OrangTuaAsuhController extends Controller
 
         $validUser = DB::select('
             SELECT *
-            FROM order
-            WHERE order.orang_tua_asuh_id = ? AND order.id = ?;
+            FROM `order`
+            WHERE `order`.`orang_tua_asuh_id` = ?
+                AND `order`.`id` = ?;
         ', [$otaID, $order_id]);
 
         if ($validUser) {
