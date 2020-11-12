@@ -273,6 +273,47 @@ class AdminController extends Controller
         return $this->falseJsonResponse();
     }
 
+    public function getUnverifiedPembelanjaanDonasi() {
+        if ($this->getAdminID()) {
+            $result = DB::select('
+                SELECT
+                    origin.sekolah_id,
+                    origin.jenjang_pendidikan,
+                    origin.nama_sekolah,
+                    origin.provinsi,
+                    origin.tahun_ajaran,
+                    `pembelanjaan_donasi`.`id` AS pembelanjaan_donasi_id,
+                    `pembelanjaan_donasi`.`tanggal` AS tanggal_pembelanjaan_donasi,
+                    `pembelanjaan_donasi`.`bukti_belanja_doc_path` AS bukti_belanja_doc_path,
+                    `pembelanjaan_donasi`.`admin_verifier_id` AS admin_verifier_id,
+                    `pembelanjaan_donasi`.`waktu_verif` AS waktu_verif,
+                    `pembelanjaan_donasi`.`catatan_admin` AS catatan_admin
+                FROM `pembelanjaan_donasi`
+                JOIN `barang` ON `barang`.`pembelanjaan_donasi_id` = `pembelanjaan_donasi`.`id`
+                JOIN (
+                    SELECT
+                        `sekolah`.`id` AS sekolah_id,
+                        `sekolah`.`jenjang_pendidikan` AS jenjang_pendidikan,
+                        `sekolah`.`nama` AS nama_sekolah,
+                        `sekolah`.`provinsi` AS provinsi,
+                        `pengajuan_anak_asuh`.`tahun_ajaran` AS tahun_ajaran,
+                        `paket_donasi`.`id` AS paket_donasi_id
+                    FROM `paket_donasi`
+                    JOIN `pengajuan_anak_asuh_detail` ON `pengajuan_anak_asuh_detail`.`paket_donasi_id` = `paket_donasi`.`id`
+                    JOIN `pengajuan_anak_asuh` ON `pengajuan_anak_asuh`.`id` = `pengajuan_anak_asuh_detail`.`pengajuan_anak_asuh_id`
+                    JOIN `sekolah` ON `sekolah`.`id` = `pengajuan_anak_asuh`.`sekolah_id`
+                ) as origin ON `origin`.paket_donasi_id = `pembelanjaan_donasi`.`paket_donasi_id`
+                WHERE `pembelanjaan_donasi`.`waktu_verif` = NULL;
+            ');
+
+            if ($result) {
+                return $this->trueJsonResponse($result);
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
     public function getMatchedData() {
         if ($this->getAdminID()) {
             $result = DB::select('
