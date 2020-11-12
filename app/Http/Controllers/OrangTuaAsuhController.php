@@ -131,7 +131,7 @@ class OrangTuaAsuhController extends Controller
         ', [$otaID, $order_id]);
 
         if ($validUser) {
-            $file = $request->file('file');
+            $file = $request->file('doc');
             $fileName = Carbon::now().'-'.$file->getClientOriginalName();
             $fileDirectory = 'uploads/ota/'.$otaID;
             $filePath = $file->storeAs($fileDirectory , $fileName);

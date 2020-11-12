@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaketDonasi;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +52,7 @@ class AdminController extends Controller
                 SELECT *
                 FROM `order`
                 WHERE `order`.`bukti_bayar_doc_path` != NULL
-                    AND `order`.`admin_verifier_pembayaran_id` = NULL;
+                    AND `order`.`waktu_verif_pembayaran` = NULL;
             ');
 
             if ($result) {
@@ -71,7 +74,32 @@ class AdminController extends Controller
                     `order`.`waktu_verif_pembayaran` = CURRENT_TIMESTAMP
                 WHERE `id` = ?
                     AND `order`.`bukti_bayar_doc_path` != NULL
-                    AND `order`.`admin_verifier_pembayaran_id` = NULL;
+                    AND `order`.`waktu_verif_pembayaran` = NULL;
+            ', [$adminID, $order_id]);
+
+            if ($result) {
+                DB::commit();
+                return $this->trueJsonResponse($result);
+            } else {
+                DB::rollBack();
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
+    public function denyPembayaran($order_id) {
+        $adminID = $this->getAdminID();
+
+        if ($adminID) {
+            DB::beginTransaction();
+            $result = DB::update('
+                UPDATE `order`
+                SET `order`.`admin_verifier_pembayaran_id` = ?,
+                    `order`.`waktu_verif_pembayaran` = NULL
+                WHERE `id` = ?
+                    AND `order`.`bukti_bayar_doc_path` != NULL
+                    AND `order`.`waktu_verif_pembayaran` = NULL;
             ', [$adminID, $order_id]);
 
             if ($result) {
@@ -90,7 +118,7 @@ class AdminController extends Controller
             $result = DB::select('
                 SELECT *
                 FROM `sekolah`
-                WHERE `sekolah`.`admin_verifier_id` = NULL;
+                WHERE `sekolah`.`waktu_verif` = NULL;
             ');
 
             if ($result) {
@@ -111,7 +139,31 @@ class AdminController extends Controller
                 SET `sekolah`.`admin_verifier_id` = ?,
                     `sekolah`.`waktu_verif` = CURRENT_TIMESTAMP
                 WHERE `sekolah`.`id` = ?
-                    AND `sekolah`.`admin_verifier_id` = NULL;
+                    AND `sekolah`.`waktu_verif` = NULL;
+            ', [$adminID, $sekolah_id]);
+
+            if ($result) {
+                DB::commit();
+                return $this->trueJsonResponse($result);
+            } else {
+                DB::rollBack();
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
+    public function denySekolah($sekolah_id) {
+        $adminID = $this->getAdminID();
+
+        if ($adminID) {
+            DB::beginTransaction();
+            $result = DB::update('
+                UPDATE `sekolah`
+                SET `sekolah`.`admin_verifier_id` = ?,
+                    `sekolah`.`waktu_verif` = NULL
+                WHERE `sekolah`.`id` = ?
+                    AND `sekolah`.`waktu_verif` = NULL;
             ', [$adminID, $sekolah_id]);
 
             if ($result) {
@@ -130,7 +182,7 @@ class AdminController extends Controller
             $result = DB::select('
                 SELECT *
                 FROM `pengajuan_anak_asuh`
-                WHERE `pengajuan_anak_asuh`.`admin_verifier_id` = NULL
+                WHERE `pengajuan_anak_asuh`.`waktu_verif` = NULL
                     AND `pengajuan_anak_asuh`.`form_doc_path` != NULL;
             ');
 
@@ -152,7 +204,32 @@ class AdminController extends Controller
                 SET  `pengajuan_anak_asuh`.`admin_verifier_id` = ?,
                     `pengajuan_anak_asuh`.`waktu_verif` = CURRENT_TIMESTAMP
                 WHERE `pengajuan_anak_asuh`.`id` = ?
-                    AND `pengajuan_anak_asuh`.`admin_verifier_id` = NULL
+                    AND `pengajuan_anak_asuh`.`waktu_verif` = NULL
+                    AND `pengajuan_anak_asuh`.`form_doc_path` != NULL;
+            ', [$adminID, $pengajuan_aa_id]);
+
+            if ($result) {
+                DB::commit();
+                return $this->trueJsonResponse($result);
+            } else {
+                DB::rollBack();
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
+    public function denyPengajuanAA($pengajuan_aa_id) {
+        $adminID = $this->getAdminID();
+
+        if ($adminID) {
+            DB::beginTransaction();
+            $result = DB::update('
+                UPDATE `pengajuan_anak_asuh`
+                SET  `pengajuan_anak_asuh`.`admin_verifier_id` = ?,
+                    `pengajuan_anak_asuh`.`waktu_verif` = NULL
+                WHERE `pengajuan_anak_asuh`.`id` = ?
+                    AND `pengajuan_anak_asuh`.`waktu_verif` = NULL
                     AND `pengajuan_anak_asuh`.`form_doc_path` != NULL;
             ', [$adminID, $pengajuan_aa_id]);
 
@@ -192,6 +269,37 @@ class AdminController extends Controller
 
             if ($result) {
                 return $this->trueJsonResponse($result);
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
+    public function inputDistribusiDonasi(Request $request) {
+        $adminID = $this->getAdminID();
+
+        if ($adminID) {
+            $paketDonasiID = $request->input('paket_donasi_id');
+            $tanggalDistribusi = $request->input('tanggal_distribusi');
+
+            $file = $request->file('doc');
+            $fileName = Carbon::now().'-bukti_distribusi-'.$file->getClientOriginalName();
+            $fileDirectory = 'uploads/paket_donasi/'.$paketDonasiID.'/distribusi';
+            $filePath = $file->storeAs($fileDirectory , $fileName);
+
+            DB::beginTransaction();
+            $result = PaketDonasi::findOrFail($paketDonasiID)
+                ->update([
+                    'admin_distributor_id' => $adminID,
+                    'tanggal_distribusi' => $tanggalDistribusi,
+                    'bukti_distribusi_doc_path' => $filePath
+                ]);
+
+            if ($request) {
+                DB::commit();
+                return $this->trueJsonResponse($request);
+            } else {
+                DB::rollBack();
             }
         }
 
