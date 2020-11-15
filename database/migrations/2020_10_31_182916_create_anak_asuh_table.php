@@ -35,7 +35,8 @@ class CreateAnakAsuhTable extends Migration
             $table->string('catatan')
                 ->nullable();
             $table->string('foto_doc_path')
-                ->unique();
+                ->unique()
+                ->nullable();
             $table->timestamps();
         });
     }
