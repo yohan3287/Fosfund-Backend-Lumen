@@ -21,14 +21,14 @@ class AdminController extends Controller
         //
     }
 
-    public function trueJsonResponse($result) {
+    private function trueJsonResponse($result) {
         return response()->json([
             "success!" => false,
             "data" => $result
         ], 200);
     }
 
-    public function falseJsonResponse() {
+    private function falseJsonResponse() {
         return response()->json([
             "success!" => false,
             "data" => ''
