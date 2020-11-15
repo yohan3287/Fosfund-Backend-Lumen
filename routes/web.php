@@ -20,6 +20,7 @@ $router->get('/', function () use ($router) {
 $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
+$router->get('/download', 'HelperController@download');
 
 $router->get('/berita', 'BeritaController@getBerita');
 
