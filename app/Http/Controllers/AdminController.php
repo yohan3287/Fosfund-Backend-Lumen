@@ -345,6 +345,21 @@ class AdminController extends Controller
         return $this->falseJsonResponse();
     }
 
+    public function getPaketDonasi() {
+        if ($this->getAdminID()) {
+            $result = DB::select('
+                SELECT *
+                FROM `paket_donasi`;
+            ');
+
+            if ($result) {
+                return $this->trueJsonResponse($result);
+            }
+        }
+
+        return $this->falseJsonResponse();
+    }
+
     public function inputDistribusiDonasi(Request $request) {
         $adminID = $this->getAdminID();
 
