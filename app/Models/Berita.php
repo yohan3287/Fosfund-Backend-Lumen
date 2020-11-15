@@ -23,7 +23,8 @@ class Berita extends Model implements AuthenticatableContract, AuthorizableContr
     protected $fillable = [
         'judul',
         'konten',
-        'image_path'
+        'image_path',
+        'admin_publisher_id'
     ];
 
     /**

@@ -16,7 +16,7 @@ class BeritaController extends Controller
         //
     }
 
-    public function getNews() {
+    public function getBerita() {
         $result = DB::select('
             SELECT *
             FROM `berita`;

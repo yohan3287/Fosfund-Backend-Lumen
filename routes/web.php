@@ -20,8 +20,9 @@ $router->get('/', function () use ($router) {
 $router->get('/keygen', function () {
     return \Illuminate\Support\Str::random(32);
 });
+$router->get('/download', 'HelperController@download');
 
-$router->get('/berita', 'BeritaController@getNews');
+$router->get('/berita', 'BeritaController@getBerita');
 
 $router->post('/ota/register', 'UserController@registerOTA');
 $router->post('/sekolah/register', 'UserController@registerSekolah');
@@ -39,15 +40,18 @@ $router->group(['middleware' => 'client'], function () use ($router) {
     $router->get('/profile', 'UserController@getProfile');
     $router->get('/logout', 'UserController@logout');
 
-    $router->get('/ota/', 'OrangTuaAsuhController@getHistory');
+    $router->get('/ota/', 'OrangTuaAsuhController@getRiwayat');
     $router->post('/ota/order', 'OrangTuaAsuhController@order');
     $router->post('/ota/bayar/{order_id}', 'OrangTuaAsuhController@confirmPayment');
 
     $router->post('/sekolah/pengajuan/anakasuh', 'SekolahController@pengajuanAA');
 
-    $router->post('/admin/verif/pembayaran/{order_id}', 'AdminController@verifPembayaran');
-    $router->post('/admin/verif/sekolah/{sekolah_id}', 'AdminController@verifSekolah');
-    $router->post('/admin/verif/pengajuan/aa/{pengajuan_aa_id}', 'AdminController@verifPengajuanAA');
+    $router->get('/admin/pembayaran/unverified', 'AdminController@getUnverifiedPembayaran');
+    $router->post('/admin/pembayaran/verif/{order_id}', 'AdminController@verifPembayaran');
+    $router->get('/admin/sekolah/unverified', 'AdminController@getUnverifiedSekolah');
+    $router->post('/admin/sekolah/verif/{sekolah_id}', 'AdminController@verifSekolah');
+    $router->get('/admin/pengajuan/aa/unverified', 'AdminController@getUnverifiedPengajuanAA');
+    $router->post('/admin/pengajuan/aa/verif/{pengajuan_aa_id}', 'AdminController@verifPengajuanAA');
 
 });
 
