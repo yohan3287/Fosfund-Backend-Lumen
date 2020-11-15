@@ -33,7 +33,8 @@ class AnakAsuh extends Model implements AuthenticatableContract, AuthorizableCon
         'pekerjaan_ibu',
         'bantuan_lain',
         'status',
-        'catatan'
+        'catatan',
+        'foto_doc_path'
     ];
 
     /**
