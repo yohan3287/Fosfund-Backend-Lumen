@@ -126,14 +126,15 @@ class OrangTuaAsuhController extends Controller
 
         $validUser = DB::select('
             SELECT *
-            FROM order
-            WHERE order.orang_tua_asuh_id = ? AND order.id = ?;
+            FROM `order`
+            WHERE `order`.`orang_tua_asuh_id` = ?
+                AND `order`.`id` = ?;
         ', [$otaID, $order_id]);
 
         if ($validUser) {
-            $file = $request->file('doc');
-            $fileName = Carbon::now().'-'.$file->getClientOriginalName();
-            $fileDirectory = 'uploads/ota/'.$otaID;
+            $file = $request->file('file');
+            $fileName = Carbon::now().'-'.$order_id.'-'.$file->getClientOriginalName();
+            $fileDirectory = 'uploads/ota/'.$otaID.'/bukti_bayar';
             $filePath = $file->storeAs($fileDirectory , $fileName);
 
             DB::beginTransaction();

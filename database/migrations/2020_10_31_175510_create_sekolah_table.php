@@ -30,12 +30,17 @@ class CreateSekolahTable extends Migration
             $table->string('provinsi');
             $table->string('kode_pos');
             $table->string('telepon');
+            $table->string('jumlah_siswa');
             $table->string('status');
             $table->string('nama_kepala_sekolah');
             $table->string('NRKS')
                 ->unique();
             $table->string('KTP_kepala_sekolah_doc_path')
                 ->unique();
+            $table->string('foto_kepala_sekolah_doc_path')
+                ->unique()
+                ->nullable();
+            $table->string('telepon_kepala_sekolah');
             $table->foreignId('admin_verifier_id')
                 ->nullable()
                 ->constrained('admin')

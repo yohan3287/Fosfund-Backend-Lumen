@@ -31,10 +31,13 @@ class Sekolah extends Model implements AuthenticatableContract, AuthorizableCont
         'provinsi',
         'kode_pos',
         'telepon',
+        'jumlah_siswa',
         'status',
         'nama_kepala_sekolah',
         'NRKS',
         'KTP_kepala_sekolah_doc_path',
+        'foto_kepala_sekolah_doc_path',
+        'telepon_kepala_sekolah',
         'admin_verifier_id',
         'waktu_verif'
     ];
