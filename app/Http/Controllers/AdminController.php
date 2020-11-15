@@ -349,7 +349,21 @@ class AdminController extends Controller
         if ($this->getAdminID()) {
             $result = DB::select('
                 SELECT *
-                FROM `paket_donasi`;
+                FROM `paket_donasi`
+                LEFT JOIN (
+                    SELECT
+                        `pembelanjaan_donasi`.`paket_donasi_id`,
+                        `pembelanjaan_donasi`.`tanggal`,
+                        `pembelanjaan_donasi`.`bukti_belanja_doc_path`,
+                        `pembelanjaan_donasi`.`admin_verifier_id`,
+                        `pembelanjaan_donasi`.`waktu_verif`,
+                        `pembelanjaan_donasi`.`catatan_admin`,
+                        `barang`.`nama` AS `nama_barang`,
+                        `barang`.`jumlah` AS `jumlah_barang`,
+                        `barang`.`harga_satuan` AS `harga_satuan_barang`
+                    FROM `pembelanjaan_donasi`
+                    JOIN `barang` ON `barang`.`pembelanjaan_donasi_id` = `pembelanjaan_donasi`.`id`
+                ) AS a ON a.paket_donasi_id = paket_donasi.id
             ');
 
             if ($result) {
